@@ -1,11 +1,10 @@
 let gulp = require('gulp');
 let sourcemaps = require('gulp-sourcemaps');
-let buffer = require('gulp-buffer');
-let uglify = require('gulp-uglify');
-let tap = require('gulp-tap');
+let source = require('vinyl-source-stream');
+let buffer = require('vinyl-buffer');
 let sass = require('gulp-sass');
 let browserify = require('browserify');
-let babel = require('babelify');
+let babelify = require('babelify');
 let autoprefixer = require('gulp-autoprefixer');
 let plumber = require('gulp-plumber');
 let browserSync = require('browser-sync').create();
@@ -21,6 +20,7 @@ gulp.task('sass', function () {
         .pipe(plumber())
         .pipe(sourcemaps.init())
         .pipe(sass({
+            includePaths: [__dirname + '/node_modules/'],
             outputStyle: 'compressed',
         }))
         .pipe(autoprefixer({
@@ -30,12 +30,21 @@ gulp.task('sass', function () {
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./src/app/css/'))
 });
+//  browserify /src/code/script/client.js -o bundle.js -t [ babelify --presets [ env ] ]
 gulp.task('build', () => {
-
-    return gulp.src('./src/code/script/client.js', {read: false})
+    let b = browserify("./src/code/script/client.js")
+        .transform("babelify", {presets: ["env", "es2015"]});
+    return b.bundle()
+        .pipe(source('./src/app/js/'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        // Add other gulp transformations (eg. uglify) to the pipeline here.
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./public/js/'));
+    /*return gulp.src('./src/code/script/client.js', {read: false})
         .pipe(plumber())
+        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(tap((file) => {
-
             file.contents = browserify(file.path, {
                 debug: true
             }).transform(babel, {
@@ -43,10 +52,9 @@ gulp.task('build', () => {
             }).bundle();
         }))
         .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(uglify())
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./src/app/js/'));
+        .pipe(gulp.dest('./src/app/js/'));*/
 });
 gulp.task('watch', function () {
     gulp.watch('./src/code/**/*.js', ['build']);
