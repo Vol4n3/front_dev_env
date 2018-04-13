@@ -1,11 +1,11 @@
 const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const glob = require('glob');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const extractSass = new ExtractTextPlugin({
-    filename: "main.css",
+    filename: "[name].css"
 });
 module.exports = {
     entry: {
@@ -21,8 +21,8 @@ module.exports = {
             {
                 test: /\.html$/,
                 use: ['html-loader'],
-                exclude : path.resolve(__dirname,'src/index.html')
-            },{
+                exclude: path.resolve(__dirname, 'src/index.html')
+            }, {
                 test: /\.(jpg|png|svg)$/,
                 use: [
                     {
@@ -39,27 +39,28 @@ module.exports = {
                 include: [
                     path.resolve(__dirname, "src")
                 ],
+                exclude: /(node_modules|bower_components)/,
                 loader: "babel-loader",
                 options: {
                     presets: ["env"]
                 },
-            },{
+            }, {
                 test: /\.scss$/,
                 use: extractSass.extract({
-                    use: [{
-                        loader: "css-loader"
-                    },{
-                        loader: "postcss-loader"
-                    },{
-                        loader: "sass-loader",
-                        options: {
-                            includePaths: ['node_modules', 'node_modules/@material/*']
-                                .map((d) => path.join(__dirname, d))
-                                .map((g) => glob.sync(g))
-                                .reduce((a, c) => a.concat(c), [])
-                        }
-                    }],
-                    fallback: "style-loader"
+                    use: [
+                        {
+                            loader: "css-loader",
+                            options: {
+                                minimize: true,
+                                sourceMap: true,
+                                root: '.',
+                                modules: true
+                            }
+                        }, {
+                            loader: "postcss-loader"
+                        }, {
+                            loader: "sass-loader",
+                        }],
                 })
             }
 
