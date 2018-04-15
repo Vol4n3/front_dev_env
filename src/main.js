@@ -1,8 +1,9 @@
-import scss from './scss/main.scss';
-import $ from 'jquery';
+import * as scss from './scss/main.scss';
+
+const $ = require('jquery');
+import * as physic from './physics/physics.ts'
 
 $(() => {
     //Code JS goes here
-    $('body').append('<p>Hello from Js</p>');
-    console.log('hello');
+    console.log("hi there ! ");
 });

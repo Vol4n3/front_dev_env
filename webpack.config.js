@@ -11,10 +11,14 @@ module.exports = {
     entry: {
         main: './src/main.js'
     },
+    devtool: 'inline-source-map',
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "app.js",
         // publicPath: "/assets/"
+    },
+    resolve: {
+        extensions: [ '.tsx', '.ts', '.js' ]
     },
     module: {
         rules: [
@@ -45,6 +49,10 @@ module.exports = {
                     presets: ["env"]
                 },
             }, {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/
+            }, {
                 test: /\.scss$/,
                 use: extractSass.extract({
                     use: [
@@ -52,9 +60,6 @@ module.exports = {
                             loader: "css-loader",
                             options: {
                                 minimize: true,
-                                sourceMap: true,
-                                root: '.',
-                                modules: true
                             }
                         }, {
                             loader: "postcss-loader"

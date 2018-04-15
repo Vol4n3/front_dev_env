@@ -1,5 +1,21 @@
 @import "variables";
 @import '~bootstrap/scss/bootstrap';
-.flex{
-  display: flex;
+
+html, body{
+  height: 100%;
+}
+#scene{
+  position: relative;
+  height: 100%;
+}
+  canvas{
+  display: block;
+}
+::-webkit-scrollbar {
+  width: 0px;  /* remove scrollbar space */
+  background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: #FF0000;
 }
