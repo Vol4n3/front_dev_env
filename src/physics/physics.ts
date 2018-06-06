@@ -4,7 +4,8 @@ import {Easing} from "./Easing";
 import {Vector} from "./geometry/Vector";
 
 const scene = new Scene("scene");
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 10; i++) {
+
     const p = new Point(Math.random()*1500, Math.random()*500);
     p.size = 20;
     p.velocity.y = 1;

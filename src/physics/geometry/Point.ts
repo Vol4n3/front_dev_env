@@ -1,7 +1,6 @@
 import {IDrawable} from "../interfaces";
 import {Vector} from "./Vector";
 import {Segment} from "./Segment";
-import {white} from "colors/safe";
 
 export class Point implements IDrawable {
     public dName: string = "Point";
